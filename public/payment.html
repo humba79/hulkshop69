@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment - Hulk SMP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .payment-box {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 0 20px #00ffcc;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #00ffaa;
+    }
+
+    .info-section {
+      text-align: center;
+      color: #00ccff;
+      margin-bottom: 1rem;
+    }
+
+    .info-text {
+      display: inline-block;
+      margin-bottom: 0.3rem;
+    }
+
+    .copy-btn {
+      background: #00cc88;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 0.3rem 0.7rem;
+      margin-left: 0.4rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    .copy-btn:hover {
+      background: #00ffaa;
+      box-shadow: 0 0 5px #00ffaa;
+    }
+
+    .quantity-display {
+      font-size: 0.85rem;
+      color: #00ccff;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      color: #00ccff;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      background: #0f0f0f;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .price-tag {
+      margin-top: 0.3rem;
+      color: #00ffaa;
+      font-size: 0.9rem;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1.2rem;
+      padding: 0.7rem;
+      background-color: #00cc88;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #00ffaa;
+      box-shadow: 0 0 10px #00ffaa;
+    }
+
+    @media (max-width: 500px) {
+      .payment-box {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-box">
+    <h2>💳 Hulk SMP Payment</h2>
+
+    <div class="info-section">
+      <div>
+        <span class="info-text">Send Money to: <strong id="pay-number">Bkash:001300-000000 Nogod:017xxxxxxxx</strong></span>
+        <button class="copy-btn" onclick="copyText('pay-number', this)">📋 Copy</button>
+      </div>
+    </div>
+
+    <div class="quantity-display" id="quantityDisplay">Quantity: 1</div>
+
+    <label for="mcname">Minecraft Name</label>
+    <input type="text" id="mcname" placeholder="e.g. Steve123" required />
+
+    <label for="product">Select Product</label>
+    <select id="product" onchange="updatePrice()" required>
+      <option value="">-- Choose Product --</option>
+      <option value="Ghost">Ghost</option>
+      <option value="Spy">Spy</option>
+      <option value="Legend">Legend</option>
+      <option value="Legend+">Legend+</option>
+      <option value="Custom Rank">Custom Rank</option>
+      <option value="Free Fly 5 min">Free Fly 5 min</option>
+      <option value="Hulk Key">Hulk Key</option>
+      <option value="Noob Key">Noob Key</option>
+    </select>
+
+    <label for="quantity">Select Quantity</label>
+    <input type="number" id="quantity" min="1" value="1" onchange="updateQuantity()" />
+
+    <div class="price-tag" id="price-tag">Price: --</div>
+    <div class="price-tag" id="total-price">Total: --</div>
+
+    <label for="trxid">Transaction ID</label>
+    <input type="text" id="trxid" placeholder="e.g. 8798ABC" required />
+
+    <label for="account">Discord Account Name</label>
+    <input type="text" id="account" placeholder="e.g. Your Discord Account Name" required />
+
+    <label for="method">Payment Option</label>
+    <select id="method" required>
+      <option value="Bkash">bKash</option>
+      <option value="Nagad">Nagad</option>
+      
+    </select>
+
+    <label for="desc">Description</label>
+    <textarea id="desc" placeholder="Optional info..."></textarea>
+
+    <button onclick="submitOrder()">✅ Submit Order</button>
+
+    <div class="info-section" style="margin-top:1rem;">
+      <div>
+        <span class="info-text">Need help? Discord: <strong id="discord-name">HulkSMP#1234</strong></span>
+        <button class="copy-btn" onclick="copyText('discord-name', this)">📋 Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const prices = {
+      "Ghost": 50,
+      "Spy": 30,
+      "Legend": 20,
+      "Legend+": 25,
+      "Custom Rank": 60,
+      "Free Fly 5 min": 100,
+      "Hulk Key": 20,
+      "Noob Key": 5
+    };
+
+    function updatePrice() {
+      const product = document.getElementById("product").value;
+      const quantity = parseInt(document.getElementById("quantity").value) || 1;
+      const priceTag = document.getElementById("price-tag");
+      const totalPriceTag = document.getElementById("total-price");
+
+      if (product && prices[product]) {
+        const price = prices[product];
+        priceTag.textContent = `Price: ${price} Taka`;
+        totalPriceTag.textContent = `Total: ${price * quantity} Taka`;
+      } else {
+        priceTag.textContent = "Price: --";
+        totalPriceTag.textContent = "Total: --";
+      }
+    }
+
+    function updateQuantity() {
+      const qty = parseInt(document.getElementById("quantity").value) || 1;
+      document.getElementById("quantityDisplay").textContent = "Quantity: " + qty;
+      updatePrice();
+    }
+
+    function submitOrder() {
+      const name = document.getElementById("mcname").value.trim();
+      const product = document.getElementById("product").value;
+      const quantity = parseInt(document.getElementById("quantity").value) || 1;
+      const trxid = document.getElementById("trxid").value.trim();
+      const account = document.getElementById("account").value.trim();
+      const method = document.getElementById("method").value;
+      const desc = document.getElementById("desc").value.trim();
+
+      if (!name || !product || !trxid || !account) {
+        alert("⚠️ Please fill all required fields.");
+        return;
+      }
+
+      const order = {
+        name,
+        product,
+        quantity,
+        price: prices[product],
+        total: prices[product] * quantity,
+        trxid,
+        account,
+        method,
+        desc
+      };
+
+      let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+      orders.push(order);
+      localStorage.setItem("orders", JSON.stringify(orders));
+
+      alert("✅ Order Done Its going to Hulks PC!");
+      window.location.href = "index.html";
+    }
+
+    function copyText(elementId, btn) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerHTML;
+        btn.innerHTML = "✅ Copied!";
+        setTimeout(() => { btn.innerHTML = original; }, 1500);
+      });
+    }
+
+    updatePrice();
+  </script>
+</body>
+</html>
+

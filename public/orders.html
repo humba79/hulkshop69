@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hulk SMP - Your Orders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ff99;
+      text-shadow: 0 0 10px #00ff99;
+      margin-bottom: 2rem;
+    }
+
+    .order-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 0 15px #00ffaa;
+    }
+
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .order-table th,
+    .order-table td {
+      padding: 0.75rem;
+      border: 1px solid #00ffaa;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .order-table th {
+      background-color: #111;
+      color: #00ccff;
+    }
+
+    .order-table td {
+      background-color: #1c1c1c;
+    }
+
+    .no-orders {
+      text-align: center;
+      font-size: 1rem;
+      color: #888;
+      padding: 1rem 0;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    .back-btn {
+      display: block;
+      margin: 2rem auto 1rem;
+      background: #00cc88;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #00ffaa;
+      box-shadow: 0 0 10px #00ffaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧾 Your Orders - Hulk SMP</h1>
+
+  <div class="order-container" id="orderSection">
+    <table class="order-table" id="ordersTable">
+      <thead>
+        <tr>
+          <th>MC Name</th>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Total (৳)</th>
+          <th>Trx ID</th>
+          <th>Account</th>
+          <th>Payment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody"></tbody>
+    </table>
+    <div class="no-orders" id="noOrders" style="display:none;">
+      No orders found. Buy something cool!
+    </div>
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">← Back to Store</button>
+
+  <footer>&copy; 2025 Hulk SMP Minecraft Store</footer>
+
+  <script>
+    const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    const tbody = document.getElementById("ordersBody");
+    const noOrders = document.getElementById("noOrders");
+
+    function renderOrders() {
+      if (orders.length === 0) {
+        noOrders.style.display = "block";
+        return;
+      }
+
+      orders.forEach(order => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order.name}</td>
+          <td>${order.product}</td>
+          <td>${order.quantity}</td>
+          <td>${order.total}</td>
+          <td>${order.trxid}</td>
+          <td>${order.account}</td>
+          <td>${order.method}</td>
+          <td>${order.status || "Processing"}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    renderOrders();
+  </script>
+</body>
+</html>

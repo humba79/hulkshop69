@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - Hulk SMP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background-color: #1a1a1a;
+      border: 2px solid #00ff99;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 15px #00ffaa;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #00ff99;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #00ffaa;
+      border-radius: 8px;
+      background-color: #0d0d0d;
+      color: white;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #00cc88;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #00ffaa;
+      box-shadow: 0 0 10px #00ffaa;
+    }
+
+    .error {
+      color: red;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>HULK SMP Admin Login</h2>
+    <input type="text" id="username" placeholder="Admin Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const errorBox = document.getElementById("errorMsg");
+
+      // 🔐 Replace these with secure credentials later
+      const ADMIN_USER = "admin";
+      const ADMIN_PASS = "hulk123";
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "admin.html";
+      } else {
+        errorBox.textContent = "Invalid username or password!";
+      }
+    }
+  </script>
+</body>
+</html>
+
